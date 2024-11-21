@@ -17,35 +17,20 @@ app.get(`${api}/hebrewdate`, (req, res) =>{
     *    Hebrew calendar date: 11 בחשוון 5785, 2:00:00
     */
 
-    // Version 1.1 - using YaelGroup sevice:
+    // Version 1.1 - using hebcal service from YaelGroup:
     // 1.1.0 using fetch
     let fetchRes = fetch("https://www.hebcal.com/converter?cfg=json&date="+req.query.date+"&g2h=1&strict=1")
-     fetchRes.then(response=>response.json()).then(d=>{res.send(d)})
-        //(response)=>{
-         //if(!response.ok)
-         //throw new Error("Network response is not ok");
-       //  return response.json;
-     //}).then((data)=>res.send(data))
-     //.catch((error)=>console.error("Error in Fetch: ",error))
+    fetchRes.then(response=>{
+        if(!response.ok)
+         throw new Error("Network response is not ok");
+        return response.json();
+    }).then(d=>{res.send(d.hebrew)})
+    .catch((error)=>console.error("Error in Fetch: ",error))   
+    /*Output Example:
+    *    י״א בְּחֶשְׁוָן תשפ״ה
+    */
 
-    // 1.1.1 using XMLHttpRequest
-    // var xhr=new XMLHttpRequest();
-    // xhr.open("GET","https://www.hebcal.com/converter?cfg=json&date="+req.query.date+"&g2h=1&strict=1",true);
-    // xhr.onload = function(){
-    //     if(xhr.status>=200 && xhr.status<300){
-    //         console.log(JSON.parse(khr.response))
-
-    //     } else{
-    //         console.error("Error message: ",xhr.statusText);
-    //     }
-
-    // };
-    // xhr.onerror = function(){
-    //     console.error("Request failed");
-    // };
-    // xhr.send();
-
-})
+    })
 
 app.listen(3000, ()=>{
     console.log(api);
